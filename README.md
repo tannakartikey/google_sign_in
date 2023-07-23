@@ -80,11 +80,11 @@ Which would make the callback `/my_own/google_sign_in_route/callback`.
 This gem provides a `google_sign_in_button` helper. It generates a button which initiates Google sign-in:
 
 ```erb
-<%= google_sign_in_button 'Sign in with my Google account', proceed_to: create_login_url %>
+<%= google_sign_in_button 'Sign in with my Google account', proceed_to: create_login_url, data: { turbo: false } %>
 
-<%= google_sign_in_button image_tag('google_logo.png', alt: 'Google'), proceed_to: create_login_url %>
+<%= google_sign_in_button image_tag('google_logo.png', alt: 'Google'), proceed_to: create_login_url, data: { turbo: false } %>
 
-<%= google_sign_in_button proceed_to: create_login_url do %>
+<%= google_sign_in_button proceed_to: create_login_url, data: { turbo: false } do %>
   Sign in with my <%= image_tag('google_logo.png', alt: 'Google') %> account
 <% end %>
 ```
@@ -119,7 +119,7 @@ class LoginsController < ApplicationController
 
   private
     def authenticate_with_google
-      if id_token = flash[:google_sign_in][:id_token]
+      if id_token = flash[:google_sign_in]['id_token']
         User.find_by google_id: GoogleSignIn::Identity.new(id_token).user_id
       elsif error = flash[:google_sign_in][:error]
         logger.error "Google authentication error: #{error}"
